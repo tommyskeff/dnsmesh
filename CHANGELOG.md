@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/tommyskeff/dnsmesh/compare/dnsmesh-v0.1.1...dnsmesh-v0.1.2) (2025-12-21)
+
+
+### Bug Fixes
+
+* correct Go module path to match GitHub repository ([#7](https://github.com/tommyskeff/dnsmesh/issues/7)) ([08f03bc](https://github.com/tommyskeff/dnsmesh/commit/08f03bcff6e0b83156ee383b730ed5783a8f5753))
+
 ## [0.1.1](https://github.com/tommyskeff/dnsmesh/compare/dnsmesh-v0.1.0...dnsmesh-v0.1.1) (2025-12-21)
 
 
