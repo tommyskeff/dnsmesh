@@ -1,0 +1,165 @@
+# -- Number of replicas
+replicaCount: 2
+
+image:
+  # -- Image repository
+  repository: ghcr.io/tommyskeff/dnsmesh
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Overrides the image tag (default is chart appVersion)
+  tag: ""
+
+# -- Image pull secrets for private registries
+imagePullSecrets: []
+
+# -- Override the name of the chart
+nameOverride: ""
+# -- Override the full name of the chart
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use
+  name: ""
+
+# -- Pod annotations
+podAnnotations: {}
+
+# -- Pod labels
+podLabels: {}
+
+# -- Pod security context
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65534
+  runAsGroup: 65534
+  fsGroup: 65534
+
+# -- Container security context
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+    add:
+      - NET_BIND_SERVICE
+
+service:
+  # -- Service type
+  type: ClusterIP
+  # -- Static ClusterIP (leave empty for auto-assignment)
+  clusterIP: ""
+  # -- DNS port (UDP)
+  dnsPort: 53
+  # -- Annotations for the service
+  annotations: {}
+
+# -- Resource limits and requests
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+# -- Node selector
+nodeSelector: {}
+
+# -- Tolerations
+tolerations: []
+
+# -- Affinity rules
+affinity: {}
+
+# -- Topology spread constraints for high availability
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: dnsmesh
+
+# Pod Disruption Budget
+podDisruptionBudget:
+  # -- Enable PodDisruptionBudget
+  enabled: true
+  # -- Minimum available pods
+  minAvailable: 1
+
+# -- DNS server configuration
+dns:
+  # -- Default TTL for DNS records (seconds)
+  ttl: 30
+  # -- Address to bind the DNS server
+  bindAddress: ":53"
+  # -- Base domain suffix for all DNS records
+  domain: "clusterset.local"
+
+# -- Log level: debug, info, warn, error
+logLevel: info
+
+# Global configuration secret
+globalConfig:
+  # -- Name of the secret containing the global config
+  secretName: dnsmesh-config
+  # -- Key within the secret containing the JSON config
+  secretKey: config
+
+# External Secrets configuration
+externalSecret:
+  # -- Enable ExternalSecret for global config
+  enabled: false
+  # -- Refresh interval for the external secret
+  refreshInterval: 1h
+  # -- SecretStore reference
+  secretStoreRef:
+    # -- Name of the SecretStore or ClusterSecretStore
+    name: vault-backend
+    # -- Kind: SecretStore or ClusterSecretStore
+    kind: ClusterSecretStore
+  # -- Remote reference configuration
+  remoteRef:
+    # -- Key path in the secret store (e.g. Vault path)
+    key: secrets/dnsmesh/config
+    # -- Property within the secret (optional, if the secret has multiple keys)
+    property: ""
+  # -- Target secret configuration
+  target:
+    # -- Name of the Kubernetes secret to create
+    name: ""  # defaults to globalConfig.secretName
+    # -- Creation policy: Owner, Orphan, Merge, None
+    creationPolicy: Owner
+    # -- Deletion policy: Retain, Delete
+    deletionPolicy: Retain
+  # -- Data mappings (alternative to remoteRef for complex configs)
+  data: []
+  # Example:
+  # - secretKey: config
+  #   remoteRef:
+  #     key: secrets/dnsmesh/config
+  #     property: data
+
+# RBAC configuration
+rbac:
+  # -- Create ClusterRole and ClusterRoleBinding for watching pods/services
+  create: true
+
+# Metrics / monitoring
+metrics:
+  # -- Enable Prometheus metrics
+  enabled: false
+  # -- Metrics port
+  port: 9090
+  serviceMonitor:
+    # -- Enable ServiceMonitor for Prometheus Operator
+    enabled: false
+    # -- Additional labels for the ServiceMonitor
+    labels: {}
+    # -- Scrape interval
+    interval: 30s

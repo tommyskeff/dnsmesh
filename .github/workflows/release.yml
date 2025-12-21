@@ -13,9 +13,9 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     outputs:
-      app-release-created: ${{ steps.release.outputs['.--release_created'] }}
-      app-tag: ${{ steps.release.outputs['.--tag_name'] }}
-      app-version: ${{ steps.release.outputs['.--version'] }}
+      app-release-created: ${{ steps.release.outputs.release_created }}
+      app-tag: ${{ steps.release.outputs.tag_name }}
+      app-version: ${{ steps.release.outputs.version }}
       chart-release-created: ${{ steps.release.outputs['charts/dnsmesh--release_created'] }}
       chart-tag: ${{ steps.release.outputs['charts/dnsmesh--tag_name'] }}
       chart-version: ${{ steps.release.outputs['charts/dnsmesh--version'] }}
