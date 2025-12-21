@@ -1,0 +1,94 @@
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      app-release-created: ${{ steps.release.outputs['.--release_created'] }}
+      app-tag: ${{ steps.release.outputs['.--tag_name'] }}
+      app-version: ${{ steps.release.outputs['.--version'] }}
+      chart-release-created: ${{ steps.release.outputs['charts/dnsmesh--release_created'] }}
+      chart-tag: ${{ steps.release.outputs['charts/dnsmesh--tag_name'] }}
+      chart-version: ${{ steps.release.outputs['charts/dnsmesh--version'] }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  publish-docker:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.app-release-created == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}},value=${{ needs.release-please.outputs.app-version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.release-please.outputs.app-version }}
+            type=raw,value=latest
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  publish-helm:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.chart-release-created == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.13.0
+
+      - name: Login to GitHub Container Registry
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Package Helm chart
+        run: |
+          helm package charts/dnsmesh --version ${{ needs.release-please.outputs.chart-version }}
+
+      - name: Push Helm chart to OCI registry
+        run: |
+          helm push dnsmesh-${{ needs.release-please.outputs.chart-version }}.tgz oci://ghcr.io/${{ github.repository_owner }}/charts

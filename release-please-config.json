@@ -1,0 +1,26 @@
+{
+    "packages": {
+        ".": {
+            "release-type": "go",
+            "package-name": "dnsmesh",
+            "changelog-path": "CHANGELOG.md",
+            "bump-minor-pre-major": true,
+            "bump-patch-for-minor-pre-major": true,
+            "extra-files": [
+                {
+                    "type": "generic",
+                    "path": "charts/dnsmesh/Chart.yaml",
+                    "glob": false
+                }
+            ]
+        },
+        "charts/dnsmesh": {
+            "release-type": "helm",
+            "package-name": "dnsmesh-chart",
+            "changelog-path": "CHANGELOG.md",
+            "bump-minor-pre-major": true,
+            "bump-patch-for-minor-pre-major": true
+        }
+    },
+    "separate-pull-requests": false
+}
