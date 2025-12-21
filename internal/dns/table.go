@@ -87,6 +87,50 @@ func (t *Table) LookupRandom(name string) net.IP {
 	return ips[rand.Intn(len(ips))]
 }
 
+func (t *Table) LookupIPv4(name string) []net.IP {
+	ips := t.Lookup(name)
+	var ipv4s []net.IP
+	for _, ip := range ips {
+		if ip.To4() != nil {
+			ipv4s = append(ipv4s, ip)
+		}
+	}
+	return ipv4s
+}
+
+func (t *Table) LookupIPv6(name string) []net.IP {
+	ips := t.Lookup(name)
+	var ipv6s []net.IP
+	for _, ip := range ips {
+		if ip.To4() == nil && ip.To16() != nil {
+			ipv6s = append(ipv6s, ip)
+		}
+	}
+	return ipv6s
+}
+
+func (t *Table) LookupRandomIPv4(name string) net.IP {
+	ips := t.LookupIPv4(name)
+	if len(ips) == 0 {
+		return nil
+	}
+	if len(ips) == 1 {
+		return ips[0]
+	}
+	return ips[rand.Intn(len(ips))]
+}
+
+func (t *Table) LookupRandomIPv6(name string) net.IP {
+	ips := t.LookupIPv6(name)
+	if len(ips) == 0 {
+		return nil
+	}
+	if len(ips) == 1 {
+		return ips[0]
+	}
+	return ips[rand.Intn(len(ips))]
+}
+
 func (t *Table) Count() int {
 	t.mu.RLock()
 	defer t.mu.RUnlock()

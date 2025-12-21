@@ -66,6 +66,8 @@ func (s *Server) handleDNS(w dns.ResponseWriter, r *dns.Msg) {
 		switch q.Qtype {
 		case dns.TypeA:
 			s.handleA(m, q)
+		case dns.TypeAAAA:
+			s.handleAAAA(m, q)
 		default:
 		}
 	}
@@ -78,7 +80,7 @@ func (s *Server) handleDNS(w dns.ResponseWriter, r *dns.Msg) {
 }
 
 func (s *Server) handleA(m *dns.Msg, q dns.Question) {
-	ip := s.table.LookupRandom(q.Name)
+	ip := s.table.LookupRandomIPv4(q.Name)
 	if ip == nil {
 		return
 	}
@@ -96,6 +98,29 @@ func (s *Server) handleA(m *dns.Msg, q dns.Question) {
 			Ttl:    s.ttl,
 		},
 		A: ipv4,
+	}
+	m.Answer = append(m.Answer, rr)
+}
+
+func (s *Server) handleAAAA(m *dns.Msg, q dns.Question) {
+	ip := s.table.LookupRandomIPv6(q.Name)
+	if ip == nil {
+		return
+	}
+
+	ipv6 := ip.To16()
+	if ipv6 == nil {
+		return
+	}
+
+	rr := &dns.AAAA{
+		Hdr: dns.RR_Header{
+			Name:   q.Name,
+			Rrtype: dns.TypeAAAA,
+			Class:  dns.ClassINET,
+			Ttl:    s.ttl,
+		},
+		AAAA: ipv6,
 	}
 	m.Answer = append(m.Answer, rr)
 }
@@ -140,6 +165,8 @@ func (s *Server) HandleTestQuery(name string, qtype uint16) *dns.Msg {
 		switch q.Qtype {
 		case dns.TypeA:
 			s.handleA(m, q)
+		case dns.TypeAAAA:
+			s.handleAAAA(m, q)
 		}
 	}
 
