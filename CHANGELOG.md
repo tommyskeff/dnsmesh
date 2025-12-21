@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/tommyskeff/dnsmesh/compare/dnsmesh-v0.1.2...dnsmesh-v0.1.3) (2025-12-21)
+
+
+### Features
+
+* add IPv6 support with AAAA record handling ([#9](https://github.com/tommyskeff/dnsmesh/issues/9)) ([491f258](https://github.com/tommyskeff/dnsmesh/commit/491f2585665596c61bbf449ebf258e6d7770cfd2))
+
 ## [0.1.2](https://github.com/tommyskeff/dnsmesh/compare/dnsmesh-v0.1.1...dnsmesh-v0.1.2) (2025-12-21)
 
 
