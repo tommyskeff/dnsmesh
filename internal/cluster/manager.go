@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/dnsmesh/internal/config"
-	"github.com/dnsmesh/internal/logging"
+	"github.com/tommyskeff/dnsmesh/internal/config"
+	"github.com/tommyskeff/dnsmesh/internal/logging"
 )
 
 const (

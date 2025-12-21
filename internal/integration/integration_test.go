@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dnsmesh/internal/cluster"
-	"github.com/dnsmesh/internal/dns"
 	mdns "github.com/miekg/dns"
+	"github.com/tommyskeff/dnsmesh/internal/cluster"
+	"github.com/tommyskeff/dnsmesh/internal/dns"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/fake"

@@ -1,4 +1,4 @@
-module github.com/dnsmesh
+module github.com/tommyskeff/dnsmesh
 
 go 1.22.0
 

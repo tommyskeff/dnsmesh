@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"syscall"
 
-	"github.com/dnsmesh/internal/cluster"
-	"github.com/dnsmesh/internal/config"
-	"github.com/dnsmesh/internal/dns"
-	"github.com/dnsmesh/internal/health"
-	"github.com/dnsmesh/internal/logging"
+	"github.com/tommyskeff/dnsmesh/internal/cluster"
+	"github.com/tommyskeff/dnsmesh/internal/config"
+	"github.com/tommyskeff/dnsmesh/internal/dns"
+	"github.com/tommyskeff/dnsmesh/internal/health"
+	"github.com/tommyskeff/dnsmesh/internal/logging"
 )
 
 const (

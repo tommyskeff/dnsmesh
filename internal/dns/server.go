@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/dnsmesh/internal/logging"
 	"github.com/miekg/dns"
+	"github.com/tommyskeff/dnsmesh/internal/logging"
 )
 
 type Server struct {
