@@ -11,17 +11,13 @@ DNSMesh watches pods and services across multiple Kubernetes clusters and serves
 ### Helm (Recommended)
 
 ```bash
-# x-release-please-start-version
-helm install dnsmesh oci://ghcr.io/tommyskeff/charts/dnsmesh --version 0.1.0 -n dnsmesh --create-namespace
-# x-release-please-end
+helm install dnsmesh oci://ghcr.io/tommyskeff/charts/dnsmesh -n dnsmesh --create-namespace
 ```
 
 ### Docker Image
 
 ```bash
-# x-release-please-start-version
-docker pull ghcr.io/tommyskeff/dnsmesh:0.1.0
-# x-release-please-end
+docker pull ghcr.io/tommyskeff/dnsmesh:latest
 ```
 
 ## DNS Format
