@@ -3,7 +3,7 @@ package cluster
 import (
 	"fmt"
 
-	"github.com/dnsmesh/internal/config"
+	"github.com/tommyskeff/dnsmesh/internal/config"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 )

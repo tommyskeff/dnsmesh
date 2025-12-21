@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"sync/atomic"
 
-	"github.com/dnsmesh/internal/logging"
+	"github.com/tommyskeff/dnsmesh/internal/logging"
 )
 
 type Server struct {

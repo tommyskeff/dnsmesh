@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/dnsmesh/internal/logging"
+	"github.com/tommyskeff/dnsmesh/internal/logging"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
