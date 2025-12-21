@@ -1,0 +1,16 @@
+{
+    "clusters": [
+        {
+            "name": "na-prod",
+            "apiServer": "https://10.20.1.1:6443",
+            "caCert": "<CA_CERTIFICATE_PEM>",
+            "token": "<SERVICE_ACCOUNT_TOKEN>"
+        },
+        {
+            "name": "eu-prod",
+            "apiServer": "https://10.20.2.1:6443",
+            "caCert": "<CA_CERTIFICATE_PEM>",
+            "token": "<SERVICE_ACCOUNT_TOKEN>"
+        }
+    ]
+}

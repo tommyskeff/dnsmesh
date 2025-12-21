@@ -1,0 +1,43 @@
+🌐 DNSMesh has been deployed!
+
+================================================================================
+ANNOTATIONS
+================================================================================
+
+Add these annotations to pods or services you want to expose via DNS:
+
+  annotations:
+    dnsmesh.tommyjs.dev/expose: "true"
+    dnsmesh.tommyjs.dev/service: "my-app"
+    dnsmesh.tommyjs.dev/realm: "prod-na"
+
+This creates DNS records like: my-app.prod-na.{{ .Values.dns.domain }}
+
+================================================================================
+COREDNS CONFIGURATION
+================================================================================
+
+To forward DNS queries for your domain to DNSMesh, add a server block to your
+CoreDNS ConfigMap (usually in kube-system namespace):
+
+  kubectl edit configmap coredns -n kube-system
+
+Add this block BEFORE the existing server block:
+
+  {{ .Values.dns.domain }}:53 {
+      errors
+      cache 30
+      forward . {{ .Values.service.clusterIP | default "<DNSMESH_IP>" }}
+  }
+
+{{- if .Values.service.clusterIP }}
+
+DNSMesh is configured with static IP: {{ .Values.service.clusterIP }}
+{{- else }}
+
+To get the DNSMesh service IP:
+
+  kubectl get svc {{ include "dnsmesh.fullname" . }} -n {{ .Release.Namespace }} -o jsonpath='{.spec.clusterIP}'
+
+TIP: Set a static IP with --set service.clusterIP=<IP> for stable CoreDNS config.
+{{- end }}
