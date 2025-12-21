@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/tommyskeff/dnsmesh/compare/dnsmesh-chart-v0.1.1...dnsmesh-chart-v0.1.2) (2025-12-21)
+
+
+### Bug Fixes
+
+* **chart:** remove unnecessary secret volume mount ([#11](https://github.com/tommyskeff/dnsmesh/issues/11)) ([f15e0e9](https://github.com/tommyskeff/dnsmesh/commit/f15e0e96c1acfe4f2dbac2b07fded55a9a70d2d9))
+
 ## [0.1.1](https://github.com/tommyskeff/dnsmesh/compare/dnsmesh-chart-v0.1.0...dnsmesh-chart-v0.1.1) (2025-12-21)
 
 
