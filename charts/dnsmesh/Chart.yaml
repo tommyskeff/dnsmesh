@@ -3,10 +3,10 @@ name: dnsmesh
 description: Simple DNS-based service discovery for multi-cluster Kubernetes
 type: application
 # x-release-please-start-version
-version: 0.1.0
+version: 1.0.0
 # x-release-please-end
 # x-release-please-start-version
-appVersion: "0.1.0"
+appVersion: "1.0.0"
 # x-release-please-end
 keywords:
   - dns
