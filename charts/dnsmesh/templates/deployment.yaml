@@ -76,14 +76,6 @@ spec:
             timeoutSeconds: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          volumeMounts:
-            - name: config-secret
-              mountPath: /etc/dnsmesh
-              readOnly: true
-      volumes:
-        - name: config-secret
-          secret:
-            secretName: {{ include "dnsmesh.globalConfigSecretName" . }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
