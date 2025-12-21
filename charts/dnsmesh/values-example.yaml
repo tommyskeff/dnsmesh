@@ -1,0 +1,19 @@
+replicaCount: 3
+service:
+  clusterIP: 10.96.100.100
+externalSecret:
+  enabled: true
+  refreshInterval: 15m
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  remoteRef:
+    key: secret/data/dnsmesh/config
+    property: data
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
