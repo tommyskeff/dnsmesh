@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/tommyskeff/dnsmesh/compare/dnsmesh-chart-v0.1.2...dnsmesh-chart-v0.1.3) (2025-12-22)
+
+
+### Bug Fixes
+
+* force release chart ([ae00360](https://github.com/tommyskeff/dnsmesh/commit/ae003609d4fe79c50f19999664fb3cdf6fde1a59))
+
 ## [0.1.2](https://github.com/tommyskeff/dnsmesh/compare/dnsmesh-chart-v0.1.1...dnsmesh-chart-v0.1.2) (2025-12-21)
 
 
