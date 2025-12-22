@@ -36,6 +36,8 @@ Example: `nginx-test.prod-na.clusterset.local`
 
 - **Multi-cluster support** - Watch resources across multiple Kubernetes clusters
 - **Annotation-based discovery** - Opt-in via `dnsmesh.tommyjs.dev/expose: "true"`
+- **Dynamic placeholders** - Use `{name}`, `{ordinal}`, `{namespace}`, etc. in annotations
+- **IPv4 and IPv6 support** - Serves both A and AAAA records
 - **Random load balancing** - Multiple IPs for the same name are returned randomly
 - **Configurable TTL** - Control DNS caching behavior
 - **Health endpoints** - `/healthz` and `/readyz` for Kubernetes probes
@@ -79,6 +81,61 @@ annotations:
 ```
 
 This creates DNS records like `my-app.prod-na.clusterset.local`.
+
+### Annotation Placeholders
+
+The `service` and `realm` annotations support dynamic placeholders that are resolved at runtime:
+
+| Placeholder | Description | Example Value |
+|-------------|-------------|---------------|
+| `{name}` | Name of the pod or service | `redis-cluster-0` |
+| `{ip}` | IP address in dash form | `10-0-0-1` |
+| `{ordinal}` | StatefulSet pod ordinal (empty for non-StatefulSet pods/services) | `0`, `1`, `2` |
+| `{namespace}` | Kubernetes namespace | `production` |
+| `{kind}` | Resource type | `pod` or `service` |
+| `{node}` | Node name (empty for services) | `node-1` |
+
+#### Examples
+
+**StatefulSet with per-pod DNS names:**
+
+```yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+spec:
+  template:
+    metadata:
+      annotations:
+        dnsmesh.tommyjs.dev/expose: "true"
+        dnsmesh.tommyjs.dev/service: "redis-{ordinal}"
+        dnsmesh.tommyjs.dev/realm: "prod"
+```
+
+This creates DNS records like `redis-0.prod.clusterset.local`, `redis-1.prod.clusterset.local`, etc.
+
+**Namespace-based realm:**
+
+```yaml
+annotations:
+  dnsmesh.tommyjs.dev/expose: "true"
+  dnsmesh.tommyjs.dev/service: "my-app"
+  dnsmesh.tommyjs.dev/realm: "{namespace}"
+```
+
+This creates DNS records using the Kubernetes namespace as the realm, e.g., `my-app.production.clusterset.local`.
+
+**Combined placeholders:**
+
+```yaml
+annotations:
+  dnsmesh.tommyjs.dev/expose: "true"
+  dnsmesh.tommyjs.dev/service: "{namespace}-{name}"
+  dnsmesh.tommyjs.dev/realm: "{kind}"
+```
+
+This creates DNS records like `production-my-app-0.pod.clusterset.local`.
 
 ### CoreDNS Configuration
 
