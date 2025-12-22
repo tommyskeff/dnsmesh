@@ -49,13 +49,11 @@ func main() {
 		logging.Info("Configuration loaded: %d clusters", len(cfg.Clusters))
 
 		if initialStartup {
-			// First load - just create the manager, InitialConnect will be called after
 			dnsTable.Clear()
 			clusterManager = cluster.NewManager(domain, dnsTable)
 			return
 		}
 
-		// Subsequent config changes - update clusters
 		if clusterManager != nil {
 			clusterManager.Stop()
 		}

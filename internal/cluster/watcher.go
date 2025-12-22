@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"regexp"
 	"strings"
 	"sync"
 
@@ -204,6 +205,10 @@ func (w *Watcher) processPod(pod *corev1.Pod) {
 		return
 	}
 
+	placeholders := w.buildPodPlaceholders(pod)
+	serviceName = resolvePlaceholders(serviceName, placeholders)
+	realm = resolvePlaceholders(realm, placeholders)
+
 	dnsName := w.buildDNSName(serviceName, realm)
 	entry := DNSEntry{
 		Name:   dnsName,
@@ -264,6 +269,10 @@ func (w *Watcher) processService(svc *corev1.Service) {
 		return
 	}
 
+	placeholders := w.buildServicePlaceholders(svc)
+	serviceName = resolvePlaceholders(serviceName, placeholders)
+	realm = resolvePlaceholders(realm, placeholders)
+
 	dnsName := w.buildDNSName(serviceName, realm)
 	entry := DNSEntry{
 		Name:   dnsName,
@@ -305,4 +314,45 @@ func (w *Watcher) buildDNSName(serviceName, realm string) string {
 		name += "."
 	}
 	return name
+}
+
+var statefulSetOrdinalRegex = regexp.MustCompile(`-([0-9]+)$`)
+
+func (w *Watcher) buildPodPlaceholders(pod *corev1.Pod) map[string]string {
+	ordinal := ""
+	if matches := statefulSetOrdinalRegex.FindStringSubmatch(pod.Name); len(matches) == 2 {
+		ordinal = matches[1]
+	}
+
+	return map[string]string{
+		"name":      pod.Name,
+		"ip":        ipToDashForm(pod.Status.PodIP),
+		"ordinal":   ordinal,
+		"namespace": pod.Namespace,
+		"kind":      "pod",
+		"node":      pod.Spec.NodeName,
+	}
+}
+
+func (w *Watcher) buildServicePlaceholders(svc *corev1.Service) map[string]string {
+	return map[string]string{
+		"name":      svc.Name,
+		"ip":        ipToDashForm(svc.Spec.ClusterIP),
+		"ordinal":   "",
+		"namespace": svc.Namespace,
+		"kind":      "service",
+		"node":      "",
+	}
+}
+
+func resolvePlaceholders(template string, placeholders map[string]string) string {
+	result := template
+	for key, value := range placeholders {
+		result = strings.ReplaceAll(result, "{" + key + "}", value)
+	}
+	return result
+}
+
+func ipToDashForm(ip string) string {
+	return strings.ReplaceAll(strings.ReplaceAll(ip, ".", "-"), ":", "-")
 }
