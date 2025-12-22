@@ -11,6 +11,7 @@ keywords:
   - service-discovery
   - multi-cluster
   - kubernetes
+  - k8s
 maintainers:
   - name: tommyskeff
 home: https://github.com/tommyskeff/dnsmesh
