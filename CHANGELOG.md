@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/tommyskeff/dnsmesh/compare/dnsmesh-v0.1.3...dnsmesh-v0.1.4) (2025-12-22)
+
+
+### Features
+
+* add placeholder support for service and realm annotations ([#14](https://github.com/tommyskeff/dnsmesh/issues/14)) ([ce555bd](https://github.com/tommyskeff/dnsmesh/commit/ce555bdd6241ba2d393ddd66614dc1a87b6aaf53))
+
 ## [0.1.3](https://github.com/tommyskeff/dnsmesh/compare/dnsmesh-v0.1.2...dnsmesh-v0.1.3) (2025-12-21)
 
 
